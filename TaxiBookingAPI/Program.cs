@@ -3,8 +3,17 @@ using TaxiBookingAPI;
 using TaxiBookingAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 // Add services to the container.
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      builder =>
+                      {
+                          builder.WithOrigins().AllowAnyHeader().AllowAnyOrigin();
+                      });
+});
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<BookingContext>(opt =>
@@ -24,6 +33,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 
